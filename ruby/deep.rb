@@ -54,11 +54,7 @@ class Perceptron
     #@w = Matrix.build(output_unit_size, @z.row_size) { 2 } for test
 
     #バイアスが引数に渡されていない場合、適当に初期化する
-    if b.nil?
-      @b = Matrix.build(@w.row_size, @z.column_size) { Random.normal_rand } if b.nil?
-    else
-      @b = b
-    end
+    @b = (b.nil?)? Matrix.build(@w.row_size, @z.column_size) { Random.normal_rand } : b
 
     p "New perceptron (w)"
     pp @w
