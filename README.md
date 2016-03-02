@@ -1,4 +1,4 @@
-# deeplearning
+# dl
  - dare to enjoy making deep learning without library.
 
 # References
