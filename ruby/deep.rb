@@ -42,12 +42,13 @@ class Perceptron
   attr_accessor :b # 列ベクトル
   attr_accessor :output_size
 
-  def initialize(z, # サンプルベクトルを並べた配列(一つ一つの配列を列ベクトルと見做す)
-                 b=nil, # バイアス 
-                 output_unit_size)
+  def initialize(
+      z,
+      b=nil, # バイアス 
+      output_unit_size)
 
     # A element of inputs is regarded as column of the matrix x
-    @z = Matrix.columns(z)
+    @z = z
 
     # Weight Matrix
     @w = Matrix.build(output_unit_size, @z.row_size) { Random.normal_rand }
@@ -75,9 +76,10 @@ class Perceptron
       return 1 / (1 + Math.exp(u))
     end
   end
-
-  def feed_forward
-    (@w * @z + @b).map { |ele| activation_function(ele) }
+  
+  # デフォルトは活性化関数を作用させる
+  def feed_forward(is_activation_funciton=true)
+    (is_activation_funciton)? (@w * @z + @b).map { |ele| activation_function(ele) } : (@w * @z + @b).map
   end
 
   # TODO 
@@ -87,8 +89,8 @@ end
 
 
 class Random
-   include Math
-
+  include Math
+  
   def self.normal_rand(mu = 0, sigma = 1.0)
     (Math.sqrt(-2*Math.log(rand()))* Math.sin(2*PI*rand()) * sigma) + mu
   end
@@ -104,7 +106,7 @@ class ErrorFunction
 end
 
 # for test
-z = [[1,30,30], [300,1,300], [-300,-300,-1]]
+z = Matrix.column [[1,30,30], [300,1,300], [-300,-300,-1]]
 output_unit_size = 2
 b = Matrix.build(output_unit_size, z.first.size) { 10 }
 per = Perceptron.new(z, b, output_unit_size)
@@ -112,3 +114,24 @@ per = Perceptron.new(z, b, output_unit_size)
 # for test
 p "feed_forward"
 pp per.feed_forward
+
+
+
+# 多層ニューラルネット構築
+
+# 試しに3層でやってみる
+b = Matrix.build(output_unit_size, z.first.size) { 10 } # バイアスは各層で共通
+
+# 1層目
+z_1 = Matrix.column [[1,30,30], [300,1,300], [-300,-300,-1]]
+output_unit_size = 2
+perceptron_1 = Perceptron.new(z_1, b, output_unit_size)
+z_2 = perceptron_1.feed_forward # feed forward
+
+# 2層目 TODO output_unit_sizeを変えること!
+perceptron_2 = Perceptron.new(z_2, b, output_unit_size) 
+z_3 = perceptron_2.feed_forward(false) # feed forward
+
+
+
+
