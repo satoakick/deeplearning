@@ -37,14 +37,13 @@ require 'pp'
 #end
 
 class Perceptron
-  attr_accessor :w # 行列
-  attr_accessor :z # 行列
-  attr_accessor :b # 列ベクトル
+  attr_accessor :w # Matrix
+  attr_accessor :z # Matrix
+  attr_accessor :b # the column vector
   attr_accessor :output_size
 
   def initialize(
       z,
-      b=nil, # バイアス 
       output_unit_size)
 
     # A element of inputs is regarded as column of the matrix x
@@ -52,10 +51,12 @@ class Perceptron
 
     # Weight Matrix
     @w = Matrix.build(output_unit_size, @z.row_size) { Random.normal_rand }
-    #@w = Matrix.build(output_unit_size, @z.row_size) { 2 } for test
 
-    #バイアスが引数に渡されていない場合、適当に初期化する
-    @b = (b.nil?)? Matrix.build(@w.row_size, @z.column_size) { Random.normal_rand } : b
+    p "@w.row_size"
+    p @w.row_size
+    p "@z.column_size"
+    p @z.column_size
+    @b = Matrix.build(@w.row_size, @z.column_size) { Random.normal_rand }
 
     p "New perceptron (w)"
     pp @w
@@ -77,9 +78,14 @@ class Perceptron
     end
   end
   
-  # デフォルトは活性化関数を作用させる
+  # As Default, Act the activation function to units.
   def feed_forward(is_activation_funciton=true)
-    (is_activation_funciton)? (@w * @z + @b).map { |ele| activation_function(ele) } : (@w * @z + @b).map
+    wz = @w * @z
+    p "@w*@z"
+    p wz
+    p "@b"
+    p @b
+    (wz + @b).map { |ele| (is_activation_funciton)? activation_function(ele) : ele }
   end
 
   # TODO 
@@ -105,33 +111,24 @@ class ErrorFunction
   end
 end
 
-# for test
-z = Matrix.column [[1,30,30], [300,1,300], [-300,-300,-1]]
+# try the 3-th layer. 
+z = Matrix[[1,30,30], [300,1,300], [-300,-300,-1]]
 output_unit_size = 2
-b = Matrix.build(output_unit_size, z.first.size) { 10 }
-per = Perceptron.new(z, b, output_unit_size)
 
-# for test
-p "feed_forward"
-pp per.feed_forward
-
-
-
-# 多層ニューラルネット構築
-
-# 試しに3層でやってみる
-b = Matrix.build(output_unit_size, z.first.size) { 10 } # バイアスは各層で共通
-
-# 1層目
-z_1 = Matrix.column [[1,30,30], [300,1,300], [-300,-300,-1]]
+# 1-th layer
+z_1 = Matrix[[1,30,30], [300,1,300], [-300,-300,-1]]
 output_unit_size = 2
-perceptron_1 = Perceptron.new(z_1, b, output_unit_size)
+perceptron_1 = Perceptron.new(z_1, output_unit_size)
 z_2 = perceptron_1.feed_forward # feed forward
 
-# 2層目 TODO output_unit_sizeを変えること!
-perceptron_2 = Perceptron.new(z_2, b, output_unit_size) 
-z_3 = perceptron_2.feed_forward(false) # feed forward
+# 2-th layer TODO Should change the output_unit_size by each layer.
+perceptron_2 = Perceptron.new(z_2, output_unit_size) 
+y = perceptron_2.feed_forward(false) # feed forward
 
-
-
-
+# For test
+p "z_1 1-th layer"
+p z_1
+p "z_2 2-th layer"
+p z_2
+p "y "
+p y
