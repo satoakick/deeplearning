@@ -1,5 +1,5 @@
-file_path = '/Users/sawadasatoaki/Downloads/train-images-idx3-ubyte'
-#file_path = '/Users/sawadasatoaki/Downloads/train-labels-idx1-ubyte'
+file_path = '../train-images-idx3-ubyte'
+#file_path = '../train-labels-idx1-ubyte'
 
 count = 1
 line = 1
