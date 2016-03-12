@@ -1,6 +1,6 @@
 # [Remark] Assume that there is the Leaning data and Test Data files in current dir.
 # This is the script which converts 28*28 to 764 dimension vector.
-# The more detail format is http://yann.lecun.com/exdb/mnist/.
+# About the more detail format, see http://yann.lecun.com/exdb/mnist/.
 
 def parse_training_data(input_filename, offset, number_by_a_line)
   count = 1
