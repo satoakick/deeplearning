@@ -97,6 +97,7 @@ end
 class Random
   include Math
   
+  # Box-Muller's method
   def self.normal_rand(mu = 0, sigma = 1.0)
     (Math.sqrt(-2*Math.log(rand()))* Math.sin(2*PI*rand()) * sigma) + mu
   end
